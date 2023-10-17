@@ -1,16 +1,16 @@
-#1
+# 1
 class Product:
-    def __init__(self, name:str, price:(int,float), description:str):
+    def __init__(self, name: str, price: (int, float), description: str):
         '''
         :param name: name of the product
         :param price: price of the product
         :param description: description of the product
         '''
-        if isinstance(name,str) and isinstance(price,(int,float)) and isinstance(description,str):
+        if isinstance(name, str) and isinstance(price, (int, float)) and isinstance(description, str):
 
-            self.name=name
-            self.price=price
-            self.description=description
+            self.name = name
+            self.price = price
+            self.description = description
         else:
             raise TypeError
 
@@ -18,52 +18,54 @@ class Product:
 
         return f'Name: {self.name}, price: {self.price}, description: {self.description}\n'
 
+
 class Cart:
     def __init__(self):
-        self.total_price=0
+        self.total_price = 0
 
-    def add_product(self,product:Product):
+    def add_product(self, product: Product):
         self.total_price += product.price
 
     def __str__(self):
         return f'Total price: {self.total_price}\n'
 
 
-phone=Product('Iphone 10', 1000,'New-brand phone')
-tv=Product('Samsung j-100', 1200,'Screen 1980px')
-jet_pack=Product('Jetpack', 9999,'Fly higher')
+phone = Product('Iphone 10', 1000, 'New-brand phone')
+tv = Product('Samsung j-100', 1200, 'Screen 1980px')
+jet_pack = Product('Jetpack', 9999, 'Fly higher')
 
-cart= Cart()
+cart = Cart()
 cart.add_product(phone)
 cart.add_product(tv)
 cart.add_product(jet_pack)
 
 print(cart)
 
-#2
+
+# 2
 class Dish:
-    def __init__(self, name:str, description:str, price:(int,float)):
+    def __init__(self, name: str, description: str, price: (int, float)):
         '''
         :param name: name of the product
         :param description: description of the product
         :param price: price of the product
         '''
         if isinstance(name, str) and isinstance(price, (int, float)) and isinstance(description, str):
-            self.name=name
-            self.description=description
-            self.price=price
+            self.name = name
+            self.description = description
+            self.price = price
         else:
             raise TypeError
 
     def __str__(self):
         return f'{self.name} - {self.price} USD\n{self.description}'
 
+
 class MenuCategory:
-    def __init__(self, name:str, dishes:list):
+    def __init__(self, name: str, dishes: list):
         if isinstance(name, str) and isinstance(dishes, list):
             self.name = name
             self.dishes = dishes
-
 
     def show_menu(self):
         print(f"*** {self.name} ***")
@@ -71,9 +73,10 @@ class MenuCategory:
             print(dish)
             print("\n")
 
+
 class Order:
     def __init__(self):
-        self.ordered_food=[]
+        self.ordered_food = []
 
     def add_item(self, item):
         self.ordered_food.append(item)
@@ -82,9 +85,8 @@ class Order:
         self.ordered_food.remove(item)
 
     def calculate_total(self):
-        total=sum(item.price for item in self.ordered_food)
+        total = sum(item.price for item in self.ordered_food)
         return total
-
 
 
 dish1 = Dish("Pasta Carbonara", "Creamy pasta with bacon and eggs", 12.99)
@@ -108,5 +110,7 @@ order.remove_item(dish1)
 
 italian_category.show_menu()
 
-
 print(f"Total order cost: {order.calculate_total()} USD")
+
+
+##############3
