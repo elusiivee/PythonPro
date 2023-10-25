@@ -122,7 +122,7 @@ try:
     italian_category = MenuCategory("Italian Food", [dish1, dish2, dish3, dish4])
     italian_category_error = MenuCategory(123, [dish1, dish2, dish3, dish4])
 except ValueError as e:
-    print(f'Error when adding a menu: {e}')        #чомусь ця помилка не спрацьовує
+    print(f'Error when adding a menu: {e}')        #чомусь ця помилка не спрацьовує, можливо через логер
 
 order = Order()
 

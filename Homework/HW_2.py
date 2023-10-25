@@ -46,17 +46,16 @@ class Cart(LoggingMixin):
         super().__init__()
         self.__products = []
         self.__quantities = []
-        try:
-            if discount is not None:
-                if not (0 <= discount.discount() <= 1):
-                    raise ValueError ('False discount')
-                else:
-                    self.discount = discount
+
+        if discount is not None:
+            if not (0 <= discount.discount() <= 1):
+                raise ValueError ('False discount')
             else:
-                self.discount = None
-        except ValueError:
-            self.log(f'Invalid discount',logging.ERROR)
+                self.discount = discount
+        else:
+            self.log(f'Invalid discount', logging.ERROR)
             self.discount = None
+
 
 
 
@@ -76,22 +75,24 @@ class Cart(LoggingMixin):
         return '\n'.join(map(lambda items: f'{items[0]} x {items[1]} = {items[0].price * items[1]} UAH',
                           zip(self.__products, self.__quantities))) + f'\nTotal: {self.total():.2f} UAH\n'
 
-
-pr_1 = Product('banana', 50)
-pr_2 = Product('apple', 51)
-pr_3 = Product('orange', 52)
-
+try:
+    pr_1 = Product('banana', 50)
+    pr_2 = Product('apple', 51)
+    pr_3 = Product('orange', 52)
+except ValueError as er:
+    print('Wrong value',er)
 
 
 cart_1 = Cart()
 cart_2 = Cart(SilverDiscount())
 
-cart_1.add_product(pr_1)
-cart_1.add_product(pr_2)
-cart_1.add_product(pr_3)
-
-
-cart_2.add_product(pr_1, 5)
+try:
+    cart_1.add_product(pr_1)
+    cart_1.add_product(pr_2)
+    cart_1.add_product(pr_3)
+    cart_2.add_product(pr_1, 5)
+except ValueError as er:
+    print('Wrong discount', er)
 
 print(cart_1)
 print(cart_2)
