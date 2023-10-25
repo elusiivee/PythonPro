@@ -63,18 +63,16 @@ class Dish(LoggingMixin):
         :param description: description of the product
         :param price: price of the product
         '''
-        try:
-            if isinstance(name, str) and isinstance(price, (int, float)) and isinstance(description, str):
-                self.name = name
-                self.description = description
-                self.price = price
-            else:
-                raise ValueError('False input')
-        except ValueError:
-            print(self.log(f'Value error', logging.ERROR))              #не впевнений що це правильно
-            self.name = None
-            self.description = None
-            self.price = 0
+
+        if isinstance(name, str) and isinstance(price, (int, float)) and isinstance(description, str):
+            self.name = name
+            self.description = description
+            self.price = price
+        else:
+            self.log(f'inpossible to add such dish ', logging.WARNING)
+            raise ValueError('False input')
+
+
 
     def __str__(self):
         return f'{self.name} - {self.price} USD\n{self.description}'
@@ -110,22 +108,34 @@ class Order:
         return total
 
 
-dish1 = Dish("Pasta Carbonara", "Creamy pasta with bacon and eggs", 12.99)
-dish2 = Dish("Margherita Pizza", "Classic pizza with tomatoes, mozzarella, and basil", 10.99)
-dish3 = Dish("Tiramisu", "Italian dessert with coffee, mascarpone, and cocoa", 6.99)
-dish4 = Dish("Lasagna", "Layered pasta with Bolognese sauce and cheese", 14.99)
-dish5 = Dish(123, "King od pasta", '14.23')        #false input
+try:
+    dish1 = Dish("Pasta Carbonara", "Creamy pasta with bacon and eggs", 12.99)
+    dish2 = Dish("Margherita Pizza", "Classic pizza with tomatoes, mozzarella, and basil", 10.99)
+    dish3 = Dish("Tiramisu", "Italian dessert with coffee, mascarpone, and cocoa", 6.99)
+    dish4 = Dish("Lasagna", "Layered pasta with Bolognese sauce and cheese", 14.99)
+    dish5 = Dish(123, "King od pasta", '14.23')        #false input
+except ValueError as e:
+    print(f'Error when adding dish to a menu: {e}')
 
-italian_category = MenuCategory("Italian Food", [dish1, dish2, dish3, dish4])
-# italian_category = MenuCategory(123, [dish1, dish2, dish3, dish4]) false input
+
+try:
+    italian_category = MenuCategory("Italian Food", [dish1, dish2, dish3, dish4])
+    italian_category_error = MenuCategory(123, [dish1, dish2, dish3, dish4])
+except ValueError as e:
+    print(f'Error when adding a menu: {e}')        #чомусь ця помилка не спрацьовує
 
 order = Order()
-order.add_item(dish1)
-order.add_item(dish1)
-order.add_item(dish2)
-order.add_item(dish3)
-order.add_item(dish4)
-order.add_item(dish5)
+
+try:
+    order.add_item(dish1)
+    order.add_item(dish1)
+    order.add_item(dish2)
+    order.add_item(dish3)
+    order.add_item(dish4)
+    #order.add_item(dish5)      #error  як позбавитись цієї помилки
+except ValueError as e:
+    print(f'Error when adding an item to the order: {e}')
+
 
 italian_category.show_menu()
 print(f"Total order cost: {order.calculate_total()} USD")
