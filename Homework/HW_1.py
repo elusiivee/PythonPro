@@ -1,5 +1,7 @@
 import logging
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 
 # # 1
 # class Product:
@@ -48,6 +50,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 # 2
 class LoggingMixin:
     '''Mixin that adds logging to a class'''
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -55,6 +58,8 @@ class LoggingMixin:
     def log(self, message, level=logging.INFO):
         '''Log a message'''
         self.logger.log(level, message)
+
+
 class Dish(LoggingMixin):
     def __init__(self, name: str, description: str, price: (int, float)):
         super().__init__()
@@ -72,8 +77,6 @@ class Dish(LoggingMixin):
             self.log(f'inpossible to add such dish ', logging.WARNING)
             raise ValueError('False input')
 
-
-
     def __str__(self):
         return f'{self.name} - {self.price} USD\n{self.description}'
 
@@ -86,6 +89,7 @@ class MenuCategory(LoggingMixin):
             self.dishes = dishes
         else:
             self.log(f'inpossible to create such menu ', logging.WARNING)
+
     def show_menu(self):
         print(f"*** {self.name} ***")
         for dish in self.dishes:
@@ -95,16 +99,32 @@ class MenuCategory(LoggingMixin):
 
 class Order:
     def __init__(self):
-        self.ordered_food = []
+        self.__ordered_food = []
 
-    def add_item(self, item):
-        self.ordered_food.append(item)
+    def __iadd__(self, item):
+        if isinstance(item, Dish):
+            self.__ordered_food.append(item)
+            return self
+        else:
+            raise ValueError('You can only add dishes')
 
-    def remove_item(self, item):
-        self.ordered_food.remove(item)
+    def __isub__(self, item):
+        if isinstance(item, Dish):
+            return [i for i in self.__ordered_food if i != item]
+        else:
+            raise ValueError('You can only add dishes')
+    def __len__(self):
+        return len(self.__ordered_food)
+    def __getitem__(self, item):
+        if 0<= item <len(self.__ordered_food):
+            return self.__ordered_food[item]
+        raise StopIteration
+    def __iter__(self):                                                                     #added iter
+        return iter(self.__ordered_food)
+
 
     def calculate_total(self):
-        total = sum(item.price for item in self.ordered_food)
+        total = sum(item.price for item in self.__ordered_food)
         return total
 
 
@@ -113,38 +133,54 @@ try:
     dish2 = Dish("Margherita Pizza", "Classic pizza with tomatoes, mozzarella, and basil", 10.99)
     dish3 = Dish("Tiramisu", "Italian dessert with coffee, mascarpone, and cocoa", 6.99)
     dish4 = Dish("Lasagna", "Layered pasta with Bolognese sauce and cheese", 14.99)
-    dish5 = Dish(123, "King od pasta", '14.23')        #false input
+    dish5 = Dish("Lasagna", "Layered pasta with Bolognese sauce and cheese", 14.99)
+    dish6 = Dish(123, "King od pasta", '14.23')  # false input
 except ValueError as e:
     print(f'Error when adding dish to a menu: {e}')
 
-
 try:
-    italian_category = MenuCategory("Italian Food", [dish1, dish2, dish3, dish4])
+    italian_category = MenuCategory("Italian Food", [dish1, dish2, dish3, dish4, dish5])
     italian_category_error = MenuCategory(123, [dish1, dish2, dish3, dish4])
 except ValueError as e:
-    print(f'Error when adding a menu: {e}')        #чомусь ця помилка не спрацьовує, можливо через логер
+    print(f'Error when adding a menu: {e}')  # чомусь ця помилка не спрацьовує, можливо через логер
 
 order = Order()
 
 try:
-    order.add_item(dish1)
-    order.add_item(dish1)
-    order.add_item(dish2)
-    order.add_item(dish3)
-    order.add_item(dish4)
-    #order.add_item(dish5)      #error  як позбавитись цієї помилки
+    order += dish1
+    order += dish2
+    order += dish3
+    order += dish4
+    order += dish5
+    # order.add_item(dish5)      #error  як позбавитись цієї помилки
 except ValueError as e:
     print(f'Error when adding an item to the order: {e}')
 
-
 italian_category.show_menu()
+
 print(f"Total order cost: {order.calculate_total()} USD")
+
+
+print('\nIteration**************')
+for product in order:
+    print(f'Name: {product.name}, price: {product.price}, description: {product.price}')
+
+
+
+print('\nSequence**************')                                           #протокол послідовності
+for i in order:
+    print(i)
+
+
+
+
+
 print('================')
-order.remove_item(dish1)
+
+order -= dish5                                            # чомусь воно не хоче видалятись (dish4 = dish5 за значеннями) і клас перетворюється на list☺
 
 italian_category.show_menu()
 
 print(f"Total order cost: {order.calculate_total()} USD")
-
 
 ##############3
