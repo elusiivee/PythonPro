@@ -23,7 +23,7 @@ def const_funk():
 const_funk()
 
 
-def WriteINFile(file_name):
+def write_in_file(file_name):
     def decorator(funk):
         def wrapper():
             with open(file_name, 'a', encoding='UTF-8') as file:
@@ -34,12 +34,12 @@ def WriteINFile(file_name):
     return decorator
 
 
-@WriteINFile('test.txt')
+@write_in_file('test.txt')
 def text_in_file():
     return 'Я потрапив в файл!!!!!!!!!'
 
 
-@WriteINFile('test.txt')
+@write_in_file('test.txt')
 def text_in_file2():
     return 'А я тут'
 
