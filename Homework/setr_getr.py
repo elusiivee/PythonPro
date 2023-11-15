@@ -72,7 +72,8 @@ class Account():
         if item != 'balance':
             raise Exception('Balance doesn`t exist.')
         return object.__getattribute__(self, item)
-
+    def __str__(self):
+        return (f'{self.__balance}')
 
 account = Account(9999)
 print(account.balance)
@@ -94,7 +95,11 @@ print('\n*************************\n')
 class User:
 
     def __init__(self, first_name, last_name):
+        """
 
+        :param first_name: str
+        :param last_name: srt
+        """
         if isinstance(first_name,str) and isinstance(last_name,str):
             self.__first_name = first_name
             self.__last_name = last_name
@@ -115,6 +120,8 @@ class User:
             raise Exception('There is no one with such name or surname')
         return object.__getattribute__(self, item)
 
+    def __str__(self):
+        return (f'{self.__first_name}, {self.__last_name}')
 user1 = User('Oleg', 'Best teacher')
 print(user1.sex)
 
@@ -131,7 +138,13 @@ except Exception as a:
 print('\n*************************\n')
 
 class Rectangle():
+
     def __init__(self,width,height):
+        """
+
+        :param width: int|float
+        :param height: int|float
+        """
         if isinstance(width,int|float) and isinstance(height,int|float):
             self.__width = width
             self.__height = height
@@ -153,7 +166,7 @@ class Rectangle():
         return object.__getattribute__(self,item)
 
     def area(self):
-        return self.__width * self.__height
+        return f'The area of the rectangle: {self.__width} * {self.__height}'
 
     def __str__(self):
         return (f'{self.__width}, {self.__height}')
@@ -169,3 +182,5 @@ try:
     rectangle1.circle
 except Exception as a:
     print(a)
+
+print(rectangle1.area())
